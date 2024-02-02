@@ -143,7 +143,7 @@ if [[ $(uname) == "Linux" ]]; then
 
     # Debian based OS
     if grep -q "debian" /etc/os-release; then
-        DEBIAN_PACKAGES="git git-lfs make jq curl sudo gpg ssh"
+        PACKAGES="git git-lfs make jq curl sudo gpg ssh"
 
         debian-packages-install() {
             echo -n -e "${C_MAGENTA}"
@@ -151,17 +151,17 @@ if [[ $(uname) == "Linux" ]]; then
             echo -n -e "${C_RST}"
 
             sudo -E apt-get update
-            sudo -E apt-get install "$DEBIAN_PACKAGES" -y
+            # shellcheck disable=SC2086
+            sudo -E apt-get install ${PACKAGES} -y
 
             if [ -n "$WSL_DISTRO_NAME" ]; then
-                sudo -E apt-get update
                 sudo -E apt-get install keychain -y
             fi
         }
 
         echo -e "${C_YELLOW}"
         echo -e "Installing following packages:"
-        echo -e "$DEBIAN_PACKAGES"
+        echo -e "$PACKAGES"
         echo
 
         options=(
@@ -171,25 +171,26 @@ if [[ $(uname) == "Linux" ]]; then
         select _ in "${options[@]}"; do
             case "$REPLY" in
                 yes|y|1) debian-packages-install; break;;
-                no|n|2) read -rp $'\n'"Make sure $DEBIAN_PACKAGES are installed - Press any key to continue"$'\n'; break;;
+                no|n|2) read -rp $'\n'"Make sure ${PACKAGES} are installed - Press any key to continue"$'\n'; break;;
             esac
         done
 
     # Arch
     elif grep -q "arch" /etc/os-release; then
-        ARCH_PACKAGES="git git-lfs make jq curl sudo"
+        PACKAGES="git git-lfs make jq curl sudo"
 
         arch-packages-install() {
             echo -n -e "${C_MAGENTA}"
             echo -e "Installing required pacman packages..."
             echo -n -e "${C_RST}"
 
-            sudo -E pacman -S "$ARCH_PACKAGES" --noconfirm
+            # shellcheck disable=SC2086
+            sudo -E pacman -S $PACKAGES --noconfirm
         }
 
         echo -e "${C_YELLOW}"
         echo -e "Installing following packages:"
-        echo -e "$ARCH_PACKAGES"
+        echo -e "$PACKAGES"
         echo -e
 
         options=(
@@ -199,13 +200,13 @@ if [[ $(uname) == "Linux" ]]; then
         select _ in "${options[@]}"; do
             case "$REPLY" in
                 yes|y|1) arch-packages-install; break;;
-                no|n|2) read -rp $'\n'"Make sure $ARCH_PACKAGES are installed - Press any key to continue"$'\n'; break;;
+                no|n|2) read -rp $'\n'"Make sure $PACKAGES are installed - Press any key to continue"$'\n'; break;;
             esac
         done
 
     # RedHat based OS
     elif grep -q "rhel" /etc/os-release; then
-        RHEL_PACKAGES="git git-lfs make jq curl sudo gpg openssh-server dnf-plugins-core"
+        PACKAGES="git git-lfs make jq curl sudo gpg openssh-server dnf-plugins-core"
 
         rhel-packages-install() {
             echo -n -e "${C_MAGENTA}"
@@ -213,12 +214,13 @@ if [[ $(uname) == "Linux" ]]; then
             echo -n -e "${C_RST}"
 
             sudo -E dnf makecache
-            sudo -E dnf install "$RHEL_PACKAGES" -y
+            # shellcheck disable=SC2086
+            sudo -E dnf install $PACKAGES -y
         }
 
         echo -e "${C_YELLOW}"
         echo -e "Installing following packages:"
-        echo -e "$RHEL_PACKAGES"
+        echo -e "$PACKAGES"
         echo
 
         options=(
@@ -228,7 +230,7 @@ if [[ $(uname) == "Linux" ]]; then
         select _ in "${options[@]}"; do
             case "$REPLY" in
                 yes|y|1) rhel-packages-install; break;;
-                no|n|2) read -rp $'\n'"Make sure $RHEL_PACKAGES are installed - Press any key to continue"$'\n'; break;;
+                no|n|2) read -rp $'\n'"Make sure $PACKAGES are installed - Press any key to continue"$'\n'; break;;
             esac
         done
 
