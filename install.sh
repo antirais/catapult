@@ -85,17 +85,18 @@ if [[ $(uname) == "Darwin" ]]; then
             echo -e "Installing MacOS packages with homebrew..."
             echo -n -e "${C_RST}"
 
-            brew install "${BREW_PACKAGES[@]}"
+            # shellcheck disable=SC2086
+            brew install $PACKAGES
         else
             echo -n -e "${C_RED}"
             echo -e "Homebrew not installed, cannot install:"
-            echo -e "$BREW_PACKAGES"
+            echo -e "$PACKAGES"
             echo -n -e "${C_RST}"
             exit 0
         fi
     }
 
-    BREW_PACKAGES="git git-lfs make jq curl md5sha1sum"
+    PACKAGES="git git-lfs make jq curl md5sha1sum"
 
     echo -n -e "${C_YELLOW}"
     echo -e "Installing homebrew?"
@@ -115,7 +116,7 @@ if [[ $(uname) == "Darwin" ]]; then
 
     echo -n -e "${C_YELLOW}"
     echo -e "Installing following packages with homebrew:"
-    echo -e "$BREW_PACKAGES"
+    echo -e "$PACKAGES"
     echo
 
     options=(
