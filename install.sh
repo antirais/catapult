@@ -2,7 +2,8 @@
 
 set -e # exit when any command fails
 
-source "$(dirname "$0")/scripts/util/color.sh"
+# shellcheck disable=SC1091
+source ./scripts/general/colors.sh
 
 # Check if script is run with sudo
 if [ $EUID -eq 0 ]; then
